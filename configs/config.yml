@@ -1,0 +1,8 @@
+log:
+  level: info
+  output: logs/app_log-%Y-%m-%d.log
+  map:
+    time: "@timestamp"
+    msg: message
+
+credentials:
