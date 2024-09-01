@@ -10,7 +10,6 @@ import (
 	"google.golang.org/api/option"
 
 	"github.com/core-go/firestore/export"
-	f "github.com/core-go/io/formatter"
 	w "github.com/core-go/io/writer"
 )
 
@@ -30,7 +29,7 @@ func NewApp(ctx context.Context, cfg Config) (*ApplicationContext, error) {
 		return nil, err
 	}
 
-	formatter, err := f.NewFixedLengthFormatter[User]()
+	transformer, err := w.NewFixedLengthTransformer[User]()
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +37,7 @@ func NewApp(ctx context.Context, cfg Config) (*ApplicationContext, error) {
 	if err != nil {
 		return nil, err
 	}
-	exporter := export.NewExporter[User](client.Collection("userimport"), BuildQuery, formatter.Format, writer.Write, writer.Close, "CreateTime", "UpdateTime")
+	exporter := export.NewExporter[User](client.Collection("userimport"), BuildQuery, transformer.Transform, writer.Write, writer.Close, "CreateTime", "UpdateTime")
 
 	return &ApplicationContext{
 		Export: exporter.Export,
